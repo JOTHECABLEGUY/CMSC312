@@ -1,0 +1,80 @@
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h> /* for exit */
+#define SHMSZ 27
+int main(){
+    int int_shmid, str_shmid;
+    key_t key, t;
+    char *str_shm;
+    int* int_shm;
+    key = 1022;
+    t = 1023;
+    if( (int_shmid = shmget(key, SHMSZ, IPC_CREAT | 0600)) < 0 )
+    {
+        perror("shmget");
+        exit(1);
+    }
+    if( (str_shmid = shmget(t, SHMSZ, IPC_CREAT | 0600)) < 0 )
+    {
+        perror("shmget");
+        exit(1);
+    }
+    if( (int_shm = (int *) shmat(int_shmid, NULL, 0)) == (int *) -1 )
+    {
+        perror("shmat");
+        exit(1);
+    }
+    if( (str_shm = shmat(str_shmid, NULL, 0)) == (char *) -1 )
+    {
+        perror("shmat");
+        exit(1);
+    }
+    strcpy(str_shm, "I am process A");
+    printf("%s\n", str_shm);
+    *int_shm = 1;
+    wait();
+    
+
+    if (fork() == 0){
+        while(*int_shm != 1)
+            usleep(1);
+        strcpy(str_shm, "I am process B");
+        *int_shm = 2;
+        wait(NULL);
+        exit(0);
+    } 
+    else
+    {
+        while (*int_shm != 2)
+            usleep(1);
+        printf("%s\n", str_shm);
+    }
+    
+    if (fork() == 0){
+        while(*int_shm != 2){usleep(1);}
+        strcpy(str_shm, "I am process C");
+        *int_shm = 3;
+        wait(NULL);
+        exit(0);
+    } 
+    else
+    {
+        while(*int_shm != 3)
+            usleep(2);
+        printf("%s\n", str_shm);
+    }
+    
+    if(shmdt(int_shm) == -1){
+        printf("%s", "cant detach");
+    }
+    if(shmdt(str_shm) == -1){
+        printf("%s", "cant detach");
+    }
+    printf("%s", "Goodbye\n");
+    shmctl(int_shmid, IPC_RMID, NULL);
+    shmctl(str_shmid, IPC_RMID, NULL);
+    return 0;
+}

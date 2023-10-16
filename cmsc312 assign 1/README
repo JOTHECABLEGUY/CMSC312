@@ -1,0 +1,47 @@
+@JORDAN DUBE
+Question 1: to compile the processes, enter the following into the command line, one line at a time:
+        gcc ProcA.c -o pa
+        gcc ProcB.c -o pb
+        gcc ProcC.c -o pc
+    Once this has been completed, execute each process ./pa  ./pb  ./pc  
+    simultaneously with each process being run from its own respective terminal.
+
+
+Question 2: to compile the process for the first part, type into the command line:
+        gcc forkProc.c -o fp
+    After this step, execute using ./fp
+    For the second part, compile the nested forks by typing in the command line:
+        gcc nestedForkProc.c -o nfp
+    After this step, execute the program with ./nfp
+
+
+Question 3: The answers to the questions are found in the pdf entitled "CMSC312 Assignment1 Q3 DUBE"
+
+
+Question 4: The files are found in their own directory. Please do not mix these files with the other 
+    files found in Question 5 as they have the same name and can conflict with each other (found that out the hard way). 
+    Once you have verified that they are in their own directory, simply type "make" in the command line. 
+    This will compile all the necessary files and intermediates. Once 
+    the make command finishes, open a separate terminal in the same directory and run the server program 
+    avg_svc.c by typing into the command line: 
+        ./avg_svc
+    This will open the RPC to allow for communication between the server and client. Once the server is running, execute the median finding program by typing into the command line:
+        ./ravg 127.0.0.1 {numbers}
+    127.0.0.1 is the default host IP address, any other hosts can be specified in the "rhost" file
+    numbers is the portion of the command where the user defines a list of numbers of which he or she would like to find the median. 
+    The program then returns a double value that is the median of numbers.
+
+
+Question 5: As in Question 4, the files are contained in their own directory and should not be moved 
+    into the same directory as the files grouped into Question 4. To compile the program, enter "make" into the command line. 
+    The next step towards execution is opening another terminal in the same directory and running the server. This can be done with:
+        ./avg_svc
+    Once this step is done, enter the execution command into the command line:
+        ./ravg 127.0.0.1 {flag} {numbers}
+    127.0.0.1 is again the default host
+    Flag is either a 0 or a 1 denoting the direction of sorting. A flag of "1" results in the returned 
+    input_data struct being sorted in DESCENDING order. 
+    "0" in the flag position yields an input_data struct sorted in ASCENDING order. 
+    The flag is not included in the numbers to be sorted. 
+    The result of the program is a list of input values being printed to the console (including the flag value) 
+    followed by a list of those numbers printed in the order specified by the direction of sorting (excluding the flag value).
